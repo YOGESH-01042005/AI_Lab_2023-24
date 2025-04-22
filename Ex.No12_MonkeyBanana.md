@@ -1,6 +1,6 @@
-# Ex.No: 11  Planning –  Monkey Banana Problem
+# Ex.No: 12  Planning –  Monkey Banana Problem
 ### DATE:                                                                            
-### REGISTER NUMBER :212222060308 
+### REGISTER NUMBER : 212222060308
 ### AIM: 
 To find the sequence of plan for Monkey Banana problem using PDDL Editor.
 ###  Algorithm:
@@ -11,53 +11,94 @@ Step 4: Specify the actions GOTO, CLIMB, PUSH-BOX, GET-KNIFE, GRAB-BANANAS in Mo
 Step 5:   Define a problem for Monkey Banana problem.<br> 
 Step 6:  Obtain the plan for given problem.<br> 
 Step 7: Stop the program.<br> 
+
 ### Program:
-(define (domain blocksworld)
-(:requirements :strips :equality)
-(:predicates (clear ?x)
-             (on-table ?x)
-             (arm-empty)
-             (holding ?x)
-             (on ?x ?y))
-(:action pickup
-  :parameters (?ob)
-  :precondition (and (clear ?ob) (on-table ?ob) (arm-empty))
-  :effect (and (holding ?ob) (not (clear ?ob)) (not (on-table ?ob)) 
-               (not (arm-empty))))
-(:action putdown
-  :parameters  (?ob)
-  :precondition (and (holding ?ob))
-  :effect (and (clear ?ob) (arm-empty) (on-table ?ob) 
-               (not (holding ?ob))))
-(:action stack
-  :parameters  (?ob ?underob)
-  :precondition (and  (clear ?underob) (holding ?ob))
-  :effect (and (arm-empty) (clear ?ob) (on ?ob ?underob)
-               (not (clear ?underob)) (not (holding ?ob))))
-(:action unstack
-  :parameters (?ob ?underob)
-  :precondition (and (on ?ob ?underob) (clear ?ob) (arm-empty))
-  :effect (and (holding ?ob) (clear ?underob)
-               (not (on ?ob ?underob)) (not (clear ?ob)) (not (arm-empty)))))
+```
+(define (domain monkey)	       
+  (:requirements :strips)
+   (:constants monkey box knife bananas glass waterfountain)
+   (:predicates (location ?x)
+	       (on-floor)
+	       (at ?m ?x)
+	       (hasknife)
+	       (onbox ?x)
+	       (hasbananas)
+	       (hasglass)
+	       (haswater))
+   ;; movement and climbing
+  (:action GO-TO
+	     :parameters (?x ?y)
+	     :precondition (and (location ?x) (location ?y) (on-floor) (at monkey ?y))
+	     :effect (and (at monkey ?x) (not (at monkey ?y))))
+   (:action CLIMB
+	     :parameters (?x)
+	     :precondition (and (location ?x) (at box ?x) (at monkey ?x))
+	     :effect (and (onbox ?x) (not (on-floor))))
+   (:action PUSH-BOX
+	     :parameters (?x ?y)
+	     :precondition (and (location ?x) (location ?y) (at box ?y) (at monkey ?y) 
+				 (on-floor))
+	     :effect (and (at monkey ?x) (not (at monkey ?y))
+			   (at box ?x)    (not (at box ?y))))
+  ;; getting bananas
+  (:action GET-KNIFE
+	     :parameters (?y)
+         :precondition (and (location ?y) (at knife ?y) (at monkey ?y))
+	     :effect (and (hasknife) (not (at knife ?y))))
+  (:action GRAB-BANANAS
+	     :parameters (?y)
+	     :precondition (and (location ?y) (hasknife) 
+                                 (at bananas ?y) (onbox ?y))
+	     :effect (hasbananas))
+  ;; getting water
+  (:action PICKGLASS
+	     :parameters (?y)
+	     :precondition (and (location ?y) (at glass ?y) (at monkey ?y))
+	     :effect (and (hasglass) (not (at glass ?y))))
+  (:action GETWATER
+	     :parameters (?y)
+	     :precondition (and (location ?y) (hasglass)
+				 (at waterfountain ?y)
+				 (at monkey ?y)
+				 (onbox ?y))
+	     :effect (haswater)))
+```
 
-
-
-
-
-
-
-
-### Input 
+### Input :
+```
 (define (problem pb1)
-   (:domain blocksworld)
-   (:objects a b)
-   (:init (on-table a) (on-table b)  (clear a)  (clear b) (arm-empty))
-   (:goal (and (on a b))))
+    	(:domain monkey)
+  	(:objects p1 p2 p3 p4 bananas monkey box knife)
+  	(:init (location p1)
+		(location p2)
+		(location p3)
+		(location p4)
+	 	(at monkey p1)
+		(on-floor)
+		(at box p2)
+		(at bananas p3)
+	 	(at knife p4)
+	)
+  	(:goal (and (hasbananas)))
+)
+```
+
 ### Output/Plan:
+![Screenshot 2024-04-29 092324](https://github.com/Vikhram-S/AI_Lab_2023-24/assets/146576573/f7a3bbb5-0d9b-43c1-bf38-9e1171e142af)
 
-![image](https://github.com/user-attachments/assets/745b9673-eccc-4ef8-b35c-ab216c9b2b9d)
+![Screenshot 2024-04-29 092338](https://github.com/Vikhram-S/AI_Lab_2023-24/assets/146576573/40b25c93-136c-410d-9b89-95ee5000b995)
 
-![image](https://github.com/user-attachments/assets/901ed5c5-a51a-4176-9470-6fd3a0826729)
+![Screenshot 2024-04-29 092352](https://github.com/Vikhram-S/AI_Lab_2023-24/assets/146576573/5867317a-726e-4940-b219-23c9edcaebf0)
+
+![Screenshot 2024-04-29 092405](https://github.com/Vikhram-S/AI_Lab_2023-24/assets/146576573/cb8a826d-b025-4dc0-8348-12ea863ef04d)
+
+![Screenshot 2024-04-29 092416](https://github.com/Vikhram-S/AI_Lab_2023-24/assets/146576573/9842351f-7a74-4c32-8523-0db328bcf00c)
+
+![Screenshot 2024-04-29 092429](https://github.com/Vikhram-S/AI_Lab_2023-24/assets/146576573/cd4fe5d4-bbfc-4f4a-be73-2517abc10869)
+
+
+
+
 
 ### Result:
 Thus the plan was found for the initial and goal state of given problem.
