@@ -61,6 +61,7 @@ Step 10 : Obtain the plan for given problem.<br>
 
 ![image](https://github.com/user-attachments/assets/ac1c72cc-c63b-41d8-aae3-aa41193db646)
 
+![image](https://github.com/user-attachments/assets/86a68986-209a-475d-b105-b3f031ec4505)
 
 ### Result:
 Thus the plan was found for the initial and goal state of block world problem.
